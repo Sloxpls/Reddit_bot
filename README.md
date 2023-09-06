@@ -12,7 +12,11 @@ Install the required Python packages by running the following command in your te
 
 ```sh
 pip install -r requirements.txt
+```
+```sh
 python main.py
+```
+
 Configuration
 You can customize its behavior by adjusting settings in the config.json file. Here's a breakdown of the key configuration options:
 
