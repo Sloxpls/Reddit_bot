@@ -9,18 +9,10 @@ class RedditFetcher:
         self.config = config
         self.subreddit_count = subreddit_count
         self.history_dict = self.load_history()
-        self.fetch_top_post()
-        self.create_text()
+        self.with_post_id()
         self.random_voice()
 
     def fetch_top_post(self):
-        reddit = praw.Reddit(
-            client_id=self.config.client_id,
-            client_secret=self.config.client_secret,
-            user_agent=self.config.user_agent,
-            username=self.config.username,
-            password=self.config.password
-        )
         all_subreddits = self.config.subreddits.split("-")
 
         if len(all_subreddits) < self.subreddit_count + 1:
@@ -28,7 +20,7 @@ class RedditFetcher:
         else:
             subreddit_to_use = all_subreddits[self.subreddit_count]
 
-        subreddit = reddit.subreddit(subreddit_to_use)
+        subreddit = self.reddit.subreddit(subreddit_to_use)
 
         submissions = subreddit.top(limit=None) if self.config.top_or_hot == "top" else subreddit.hot(limit=None)
 
@@ -46,6 +38,25 @@ class RedditFetcher:
                         if input(Fore.BLUE + "Do you want to create this video? [Y/N]: " + Fore.RESET).strip().upper() == "Y":
                             self.submission = submission
                             return
+
+    def with_post_id(self):
+        self.reddit = praw.Reddit(
+            client_id=self.config.client_id,
+            client_secret=self.config.client_secret,
+            user_agent=self.config.user_agent,
+            username=self.config.username,
+            password=self.config.password
+        )
+
+        if self.config.post_id != "":
+            post_id = self.config.post_id
+            submission = self.reddit.submission(id=post_id)
+            self.submission = submission
+            self.create_text()
+        else:
+            self.fetch_top_post()
+            self.create_text()
+
 
     def load_history(self):
         history_file_path = os.path.join(os.getcwd(), "assets", "json", "history.json")
