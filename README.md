@@ -41,6 +41,7 @@ username, password, client_id, client_secret: Enter your Reddit API credentials 
 video_download_dir: Directory to store downloaded background videos.
 
 audio_download_dir: Directory to store downloaded background audio.
+
 ------------------------------------------------
 
 
