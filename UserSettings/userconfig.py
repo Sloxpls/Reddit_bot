@@ -47,7 +47,7 @@ class ConfigManager:
                 self.create_subclips = None
                 self.fps = 30
                 self.length_of_subclip = None
-                self.background = "Minecraft.mp4"
+                self.background = ""
                 self.post_preview = None
                 self.amount_of_post = None
                 self.voice = 3
