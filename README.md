@@ -1,22 +1,19 @@
-Overview:
-The Reddit Video Generator is a Python script designed to help you create engaging videos from Reddit posts. It automates the process of fetching top posts from specified subreddits, converting post text to speech, and combining it with background videos.
-The script will fetch posts, generate videos, and save them in the specified output directory.
-On the first run of the script, you will be askt to fill in all the config options, then it will automatically download background videos from YouTube for later use. This initial download ensures that you have a variety of backgrounds to work with.
+## Overview
+The Reddit Video Generator is a Python script designed to help you create engaging videos from Reddit posts. It automates the process of fetching top posts from specified subreddits, converting post text to speech, and combining it with background videos. The script will fetch posts, generate videos, and save them in the specified output directory. On the first run of the script, you will be asked to fill in all the config options, then it will automatically download background videos from YouTube for later use. This initial download ensures that you have a variety of backgrounds to work with.
+
 Follow these steps to get started:
 
-------------------------------------------------
-Installation:
+---
+
+## Installation
 First, make sure you have Python 3.x installed on your system.
 
 Install the required Python packages by running the following command in your terminal or command prompt:
 
-Copy code
-pip install -r requirements.txt 
-Copy code
+```sh
+pip install -r requirements.txt
 python main.py
-
-------------------------------------------------
-Configuration:
+Configuration
 You can customize its behavior by adjusting settings in the config.json file. Here's a breakdown of the key configuration options:
 
 subreddits: Specify the list of subreddits to fetch posts from (e.g., "subreddits": "funny-pics-pics").
@@ -42,10 +39,3 @@ username, password, client_id, client_secret: Enter your Reddit API credentials 
 video_download_dir: Directory to store downloaded background videos.
 
 audio_download_dir: Directory to store downloaded background audio.
-
-------------------------------------------------
-
-
-
-
-
