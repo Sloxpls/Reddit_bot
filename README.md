@@ -11,7 +11,7 @@ First, make sure you have Python 3.x installed on your system.
 Before you can use this Python script, you'll need to have ImageMagick installed on your system. ImageMagick is a powerful open-source software suite for displaying, converting, and editing images. You can download and install ImageMagick from their official website at [https://imagemagick.org/](https://imagemagick.org/).
 
 Please make sure that ImageMagick is properly configured and accessible from the command line before running this script. Once ImageMagick is installed, you should be all set to use our Python script to perform various image-related tasks.
-
+When installing ImageMagick you need to check the box legay utills
 Install the required Python packages by running the following command in your terminal or command prompt:
 
 ```sh
