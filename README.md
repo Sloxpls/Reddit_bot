@@ -11,7 +11,8 @@ First, make sure you have Python 3.x installed on your system.
 Install the required Python packages by running the following command in your terminal or command prompt:
 
 Copy code
-pip install -r requirements.txt |
+pip install -r requirements.txt 
+Copy code
 python main.py
 
 ------------------------------------------------
