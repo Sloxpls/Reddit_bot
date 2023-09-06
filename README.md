@@ -17,7 +17,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Configuration
+## Configuration options
 You can customize its behavior by adjusting settings in the config.json file. Here's a breakdown of the key configuration options:
 
 subreddits: Specify the list of subreddits to fetch posts from (e.g., "subreddits": "funny-pics-pics").
