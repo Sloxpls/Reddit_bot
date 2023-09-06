@@ -1,3 +1,4 @@
+from UserSettings.fileTree import dir_exist
 from UserSettings.userconfig import ConfigManager
 from Reddit.reddit_fetcher import RedditFetcher
 from TextToSpeech.tts import TextProcessor
@@ -8,6 +9,7 @@ from cleaning.clean import remove_subdirectories
 
 
 def main():
+    dir_exist()
     config = ConfigManager()
     BackgroundDownloader()
 
