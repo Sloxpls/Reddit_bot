@@ -1,6 +1,7 @@
 import os
 import random
 import json
+import time
 
 from moviepy.editor import (
     concatenate_audioclips,
@@ -52,12 +53,15 @@ class FinalVideo:
                 save_path = self.create_save_path(count)
                 self.add_part_number(video, count, finalvideo_list, save_path)
                 count += 1
+                time.sleep(0.5)
         else:
             audio_clip_full = concatenate_audioclips(audio_clip_list)
             text_clip_full = concatenate_videoclips(text_clips_list)
             background_minus_text = self.get_background_video(image_clip, audio_clip_full)
             final_video_full = CompositeVideoClip([background_minus_text, text_clip_full.set_position('center')])
             final_video_full.write_videofile(save_path, fps=self.config.fps, threads=os.cpu_count(), codec='libx264')
+            time.sleep(0.5)
+
 
         self.write_to_history()
 
