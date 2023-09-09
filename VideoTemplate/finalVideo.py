@@ -2,7 +2,7 @@ import os
 import random
 import json
 import time
-
+import threading
 from moviepy.editor import (
     concatenate_audioclips,
     TextClip,
@@ -11,7 +11,6 @@ from moviepy.editor import (
     VideoFileClip,
     AudioFileClip
 )
-
 
 class FinalVideo:
     def __init__(self, config, reddit_fetcher, tts, subclips):
@@ -29,39 +28,20 @@ class FinalVideo:
         image_clip = VideoFileClip(background_video_path)
 
         aspect_ratio = 9 / 16
-
-        # Given width and height (adjust these as needed)
-        width = 1080
-        height = 1920
-
-        # Calculate the new width to maintain the aspect ratio
+        width = 1920
+        height = 1080
         new_width = int(height * aspect_ratio)
-
-        # Calculate the cropping coordinates
         x1 = (width - new_width) / 2
         x2 = x1 + new_width
         y1 = 0
         y2 = height
-
-        # Crop the image using the calculated coordinates
         image_clip = image_clip.crop(x1=x1, y1=y1, x2=x2, y2=y2)
 
         if self.config.create_subclips and not self.config.create_full:
             finalvideo_list = self.split_into_subclips(audio_clip_list, text_clips_list, image_clip)
-            count = 1
-            for video in finalvideo_list:
-                save_path = self.create_save_path(count)
-                self.add_part_number(video, count, finalvideo_list, save_path)
-                count += 1
-                time.sleep(0.5)
+            self.export_subclips(finalvideo_list)
         else:
-            audio_clip_full = concatenate_audioclips(audio_clip_list)
-            text_clip_full = concatenate_videoclips(text_clips_list)
-            background_minus_text = self.get_background_video(image_clip, audio_clip_full)
-            final_video_full = CompositeVideoClip([background_minus_text, text_clip_full.set_position('center')])
-            final_video_full.write_videofile(save_path, fps=self.config.fps, threads=os.cpu_count(), codec='libx264')
-            time.sleep(0.5)
-
+            self.export_full_video(audio_clip_list, text_clips_list, image_clip, save_path)
 
         self.write_to_history()
 
@@ -121,9 +101,9 @@ class FinalVideo:
             os.makedirs(save_path_dir)
 
         if count is None:
-            save_path = os.path.join(save_path_dir, save_path_file + ".mp4")
+            save_path = os.path.join(save_path_dir, save_path_file + ".WebM")
         else:
-            save_path = os.path.join(save_path_dir, f"{count}-{save_path_file}.mp4")
+            save_path = os.path.join(save_path_dir, f"{count}-{save_path_file}.WebM")
 
         return save_path
 
@@ -166,3 +146,22 @@ class FinalVideo:
         final = CompositeVideoClip([video, add_text])
 
         final.write_videofile(save_path_subclip, fps=self.config.fps, threads=os.cpu_count(), codec='libx264')
+
+    def export_full_video(self, audio_clip_list, text_clips_list, image_clip, save_path):
+        audio_clip_full = concatenate_audioclips(audio_clip_list)
+        text_clip_full = concatenate_videoclips(text_clips_list)
+        background_minus_text = self.get_background_video(image_clip, audio_clip_full)
+        final_video_full = CompositeVideoClip([background_minus_text, text_clip_full.set_position('center')])
+        final_video_full.write_videofile(
+            save_path,
+            fps=self.config.fps,
+            threads=os.cpu_count(),
+            codec='libvpx',
+            preset='ultrafast',  # You can adjust the preset as needed.
+            ffmpeg_params=['-b:v', '2M']  # Adjust the bitrate as needed.
+        )
+
+    def export_subclips(self, finalvideo_list):
+        for count, video in enumerate(finalvideo_list, start=1):
+            save_path_subclip = self.create_save_path(count)
+            self.add_part_number(video, count, finalvideo_list, save_path_subclip)
