@@ -1,6 +1,10 @@
 import os
 import textwrap
-from moviepy.editor import AudioFileClip, TextClip
+import numpy as np
+from moviepy.audio.io.AudioFileClip import AudioFileClip
+from moviepy.editor import TextClip
+from moviepy.video.compositing.concatenate import concatenate_videoclips
+
 
 class VideoCreator:
     def __init__(self, config, reddit_fetcher, tts):
@@ -66,27 +70,43 @@ class VideoCreator:
             self.text_clips_list = text_clips_list
             self.audio_clip_list = audio_clip_list
 
+    from moviepy.editor import TextClip, concatenate_videoclips
+    import textwrap
+
     def get_clip_text(self, count, audio_clip_duration):
-        text = []
-
+        # Get the text to display based on the 'count' parameter
         if count is None:
-            lines = textwrap.wrap(self.reddit_fetcher.title_text, width=55)
+            text = self.reddit_fetcher.title_text
         else:
-            lines = textwrap.wrap(self.tts.chunks[count], width=55)
+            text = self.tts.chunks[count]
 
-        for line in range(len(lines)):
-            text.append(lines[line])
-            text.append('\n')
-        text = ''.join(text)
-        txt_clip = TextClip(
-            text,
-            fontsize=40,
-            color='rgb(255,255,255)',
-            bg_color="rgba(48, 48, 48, 0.9)",
-            size=(1000, 500),
-            method='caption'
-        )
 
-        txt_clip = txt_clip.set_duration(audio_clip_duration + 0.5).set_position('center')
+        # Calculate the duration for each word
+        words = text.split()
+        word_duration = (audio_clip_duration / len(words)) * 2
+
+        two_word_list = []
+
+        for i in range(0, len(words), 2):
+            if i + 1 < len(words):
+                two_word_list.append(words[i] + " " + words[i + 1])
+
+        # Initialize a list to store subclips for each word
+        subclips = []
+
+        # Specify the path to your custom font file
+        custom_font = r"C:\Users\jim\Desktop\Reddit_botV3\assets\fonts\Aloevera-OVoWO.ttf"  # Replace with the actual path
+
+        # Create subclips for each word and apply crossfadein effect
+        for word in two_word_list:
+            word_clip = TextClip(word, fontsize=60, color='white', bg_color="rgba(48, 48, 48, 0.9)",
+                                 size=(450, 200), method='caption', font=custom_font)
+            word_clip = word_clip.set_duration(word_duration).crossfadein(0)
+            subclips.append(word_clip)
+
+        # Concatenate the subclips to create the final text clip
+        txt_clip = concatenate_videoclips(subclips, method="compose")
+        txt_clip = txt_clip.set_position('center')
 
         return txt_clip
+
