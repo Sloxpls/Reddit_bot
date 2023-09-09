@@ -80,28 +80,41 @@ class VideoCreator:
         else:
             text = self.tts.chunks[count]
 
-
-        # Calculate the duration for each word
+        # Calculate the start time for each word based on its position in the text
         words = text.split()
-        word_duration = (audio_clip_duration / len(words)) * 2
+        word_durations = []
 
-        two_word_list = []
-
-        for i in range(0, len(words), 2):
-            if i + 1 < len(words):
-                two_word_list.append(words[i] + " " + words[i + 1])
+        # Calculate the duration for each word based on the audio clip's total duration
+        for i, word in enumerate(words):
+            start_time = (i / len(words)) * audio_clip_duration
+            end_time = ((i + 1) / len(words)) * audio_clip_duration
+            word_duration = end_time - start_time
+            word_durations.append(word_duration)
 
         # Initialize a list to store subclips for each word
         subclips = []
 
         # Specify the path to your custom font file
-        custom_font = r"C:\Users\jim\Desktop\Reddit_botV3\assets\fonts\Aloevera-OVoWO.ttf"  # Replace with the actual path
+        custom_font = r"C:\Users\jim\Desktop\Reddit_botV3\assets\fonts\Aloevera-OVoWO.ttf"
+
+        # Define the RGB background color with some transparency (e.g., 80% transparent gray)
+        bg_color_rgba = (48, 48, 48, 0.8)  # (R, G, B, Alpha)
+
+        # Define the black outline color
+        outline_color = 'black'
+
+        # Define the outline width
+        outline_width = 4  # Adjust as needed
 
         # Create subclips for each word and apply crossfadein effect
-        for word in two_word_list:
-            word_clip = TextClip(word, fontsize=60, color='white', bg_color="rgba(48, 48, 48, 0.9)",
-                                 size=(450, 200), method='caption', font=custom_font)
-            word_clip = word_clip.set_duration(word_duration).crossfadein(0)
+        for i, word in enumerate(words):
+            start_time = (i / len(words)) * audio_clip_duration
+            word_duration = word_durations[i]
+
+            word_clip = TextClip(word, fontsize=80, color='yellow',
+                                 method='caption', font=custom_font,
+                                 stroke_color=outline_color, stroke_width=outline_width)
+            word_clip = word_clip.set_start(start_time).set_duration(word_duration).crossfadein(0.2)
             subclips.append(word_clip)
 
         # Concatenate the subclips to create the final text clip
@@ -109,4 +122,5 @@ class VideoCreator:
         txt_clip = txt_clip.set_position('center')
 
         return txt_clip
+
 
