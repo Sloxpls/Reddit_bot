@@ -96,7 +96,7 @@ class FinalVideo:
         for char in bad_char_list:
             save_path_file = save_path_file.replace(char, "")
 
-        save_path_dir = os.path.join(os.getcwd(), "finishedVideo", self.config.subreddits)
+        save_path_dir = os.path.join(os.getcwd(), "finishedVideo", self.reddit_fetcher.subreddit)
         if not os.path.exists(save_path_dir):
             os.makedirs(save_path_dir)
 
