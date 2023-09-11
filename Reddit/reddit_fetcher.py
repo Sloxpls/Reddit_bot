@@ -102,6 +102,7 @@ class RedditFetcher:
         self.post_id = post_id
         self.title_text = title_text
         self.self_text = self_text
+        self.subreddit = self.submission.subreddit.display_name
 
         # Print a clear message indicating that text has been read and stored
         separator = "---------------------------------------------------"
