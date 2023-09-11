@@ -75,30 +75,10 @@ class VideoCreator:
 
     def get_clip_text(self, count, audio_clip_duration):
         # Get the text to display based on the 'count' parameter
-        if count is None:
-            text = self.reddit_fetcher.title_text
-        else:
-            text = self.tts.chunks[count]
-
-        # Calculate the start time for each word based on its position in the text
-        words = text.split()
-        word_durations = []
-
-        # Calculate the duration for each word based on the audio clip's total duration
-        for i, word in enumerate(words):
-            start_time = (i / len(words)) * audio_clip_duration
-            end_time = ((i + 1) / len(words)) * audio_clip_duration
-            word_duration = end_time - start_time
-            word_durations.append(word_duration)
-
-        # Initialize a list to store subclips for each word
-        subclips = []
-
-        # Specify the path to your custom font file
         custom_font = r"C:\Users\jim\Desktop\Reddit_botV3\assets\fonts\Aloevera-OVoWO.ttf"
 
         # Define the RGB background color with some transparency (e.g., 80% transparent gray)
-        bg_color_rgba = (48, 48, 48, 0.8)  # (R, G, B, Alpha)
+        bg_color_rgba = ("rgba(48, 48, 48, 0.8)")  # (R, G, B, Alpha)
 
         # Define the black outline color
         outline_color = 'black'
@@ -106,21 +86,46 @@ class VideoCreator:
         # Define the outline width
         outline_width = 4  # Adjust as needed
 
-        # Create subclips for each word and apply crossfadein effect
-        for i, word in enumerate(words):
-            start_time = (i / len(words)) * audio_clip_duration
-            word_duration = word_durations[i]
+        if count is None:
+            text = self.reddit_fetcher.title_text
+            txt_clip = TextClip(text, size=(550, 300), fontsize=30, color='yellow',method='caption', bg_color=bg_color_rgba, font=custom_font)
+            txt_clip = txt_clip.set_position('center').set_duration(audio_clip_duration)
+            return txt_clip
 
-            word_clip = TextClip(word, fontsize=80, color='yellow',
-                                 method='caption', font=custom_font,
-                                 stroke_color=outline_color, stroke_width=outline_width)
-            word_clip = word_clip.set_start(start_time).set_duration(word_duration).crossfadein(0.2)
-            subclips.append(word_clip)
+        else:
+            text = self.tts.chunks[count]
 
-        # Concatenate the subclips to create the final text clip
-        txt_clip = concatenate_videoclips(subclips, method="compose")
-        txt_clip = txt_clip.set_position('center')
+            # Calculate the start time for each word based on its position in the text
+            words = text.split()
+            word_durations = []
 
-        return txt_clip
+            # Calculate the duration for each word based on the audio clip's total duration
+            for i, word in enumerate(words):
+                start_time = (i / len(words)) * audio_clip_duration
+                end_time = ((i + 1) / len(words)) * audio_clip_duration
+                word_duration = end_time - start_time
+                word_durations.append(word_duration)
+
+            # Initialize a list to store subclips for each word
+            subclips = []
+
+            # Specify the path to your custom font file
+
+            # Create subclips for each word and apply crossfadein effect
+            for i, word in enumerate(words):
+                start_time = (i / len(words)) * audio_clip_duration
+                word_duration = word_durations[i]
+
+                word_clip = TextClip(word, fontsize=80, color='yellow',
+                                     method='caption', font=custom_font,
+                                     stroke_color=outline_color, stroke_width=outline_width)
+                word_clip = word_clip.set_start(start_time).set_duration(word_duration).crossfadein(0.2)
+                subclips.append(word_clip)
+
+            # Concatenate the subclips to create the final text clip
+            txt_clip = concatenate_videoclips(subclips, method="compose")
+            txt_clip = txt_clip.set_position('center')
+
+            return txt_clip
 
 
