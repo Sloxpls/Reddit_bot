@@ -1,8 +1,10 @@
 import os
 import random
 import json
-import time
-import threading
+
+from moviepy.audio.fx import audio_fadein, audio_fadeout
+from moviepy.editor import VideoFileClip
+
 from moviepy.editor import (
     concatenate_audioclips,
     TextClip,
@@ -26,6 +28,7 @@ class FinalVideo:
         audio_clip_list = self.subclips.audio_clip_list
         text_clips_list = self.subclips.text_clips_list
         image_clip = VideoFileClip(background_video_path)
+        background_audio_path = r"assets/backgrounds/audio/Mellow Vibes Radio-chill-summer.mp3"
 
         aspect_ratio = 9 / 16
         width = 1920
@@ -41,7 +44,7 @@ class FinalVideo:
             finalvideo_list = self.split_into_subclips(audio_clip_list, text_clips_list, image_clip)
             self.export_subclips(finalvideo_list)
         else:
-            self.export_full_video(audio_clip_list, text_clips_list, image_clip, save_path)
+            self.export_full_video(audio_clip_list, text_clips_list, image_clip, save_path, background_audio_path)
 
         self.write_to_history()
 
@@ -147,21 +150,63 @@ class FinalVideo:
 
         final.write_videofile(save_path_subclip, fps=self.config.fps, threads=os.cpu_count(), codec='libx264')
 
-    def export_full_video(self, audio_clip_list, text_clips_list, image_clip, save_path):
+    def export_full_video(self, audio_clip_list, text_clips_list, image_clip, save_path, background_audio_path,
+                          background_audio_volume=0.1):
+        # Concatenate audio clips from the audio_clip_list
         audio_clip_full = concatenate_audioclips(audio_clip_list)
+
+        # Concatenate video clips from the text_clips_list
         text_clip_full = concatenate_videoclips(text_clips_list)
+
+        # Load the background audio
+        background_audio_path = self.Get_background_audio_path()
+        background_audio = AudioFileClip(background_audio_path)
+
+        # Set the duration of the background audio to match the duration of text_clip_full
+        background_audio = background_audio.set_duration(text_clip_full.duration)
+
+        # Lower the volume of the background audio
+        background_audio = background_audio.volumex(background_audio_volume)
+
+        # Set the audio of text_clip_full to the background audio
+        text_clip_full = text_clip_full.set_audio(background_audio)
+
+        # Create the background video without text by combining image_clip and audio_clip_full
         background_minus_text = self.get_background_video(image_clip, audio_clip_full)
+
+        # Create the final video by overlaying text_clip_full on top of background_minus_text
         final_video_full = CompositeVideoClip([background_minus_text, text_clip_full.set_position('center')])
+
+        # Write the final video to the specified save_path
         final_video_full.write_videofile(
             save_path,
             fps=self.config.fps,
             threads=os.cpu_count(),
             codec='libvpx',
-            preset='ultrafast',  # You can adjust the preset as needed.
-            ffmpeg_params=['-b:v', '2M']  # Adjust the bitrate as needed.
+            preset='ultrafast',
+            ffmpeg_params=['-b:v', '2M']
         )
 
     def export_subclips(self, finalvideo_list):
         for count, video in enumerate(finalvideo_list, start=1):
             save_path_subclip = self.create_save_path(count)
             self.add_part_number(video, count, finalvideo_list, save_path_subclip)
+
+
+    def Get_background_audio_path(self):
+        path_to_backgrounds_audio = os.path.join(os.getcwd(), "assets", "backgrounds", "audio")
+        """
+        if self.config.background != "":
+            background_audio_path = os.path.join(path_to_backgrounds_audio, self.config.background + ".mp3")
+        else:
+            file_list = os.listdir(path_to_backgrounds_audio)
+            background = random.choice(file_list)
+            background_audio_path = os.path.join(path_to_backgrounds_audio, background)
+        return background_audio_path
+        """
+
+        file_list = os.listdir(path_to_backgrounds_audio)
+        background = random.choice(file_list)
+        background_audio_path = os.path.join(path_to_backgrounds_audio, background)
+        return background_audio_path
+
