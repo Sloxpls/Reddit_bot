@@ -113,10 +113,10 @@ class RedditFetcher:
     def random_voice(self):
         voice_int = self.config.voice
 
-        if voice_int == 1:
+        if voice_int == "F":
             self.voice = "en_au_001"
-        elif voice_int == 2:
+        elif voice_int == "M":
             self.voice = "en_au_002"
-        elif voice_int == 3:
+        elif voice_int == "Maunal":
             choice = input(Fore.BLUE + "Male or female voice [M/F]: " + Fore.RESET).lower()  # Blue text for input
             self.voice = "en_au_002" if choice == "m" else "en_au_001"
