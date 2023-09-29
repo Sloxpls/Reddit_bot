@@ -58,5 +58,23 @@
         "steep.mp4",
         "joel",
         "center"
+    ],
+    "Slime_ASMR": [
+        "https://www.youtube.com/watch?v=lcPTDc9vHkE&ab_channel=TalisaTossell",
+        "Slime_ASMR.mp4",
+        "Talisa Tossell",
+        "center"
+    ],
+    "HYDRAULIC_PRESS": [
+        "https://www.youtube.com/watch?v=y0Xso_JdbZE&ab_channel=CrazyHydraulicPress",
+        "HYDRAULIC_PRESS.mp4",
+        "Crazy Hydraulic Press",
+        "center"
+    ],
+    "Satisfying_workers": [
+        "https://www.youtube.com/watch?v=efXOrthfd2U&ab_channel=WOWTech",
+        "Satisfying_workers.mp4",
+        "WOW Tech",
+        "center"
     ]
 }
