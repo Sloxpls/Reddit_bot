@@ -1,5 +1,7 @@
 import os
-from local_tts import local_TTS
+
+from TextToSpeech.local_tts import local_TTS
+
 
 class TextProcessor:
     def __init__(self, config, reddit_fetcher):

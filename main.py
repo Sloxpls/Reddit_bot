@@ -2,6 +2,7 @@ from UserSettings.fileTree import dir_exist
 from UserSettings.userconfig import ConfigManager
 from Reddit.reddit_fetcher import RedditFetcher
 from TextToSpeech.tts import TextProcessor
+from TextToSpeech.local_tts import local_TTS
 from VideoTemplate.create_mp4 import VideoCreator
 from VideoTemplate.finalVideo import FinalVideo
 from downlowds.bakgrunds import BackgroundDownloader
