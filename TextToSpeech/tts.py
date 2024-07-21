@@ -1,5 +1,5 @@
 import os
-from TextToSpeech.TikToktts import TikTok
+from local_tts import local_TTS
 
 class TextProcessor:
     def __init__(self, config, reddit_fetcher):
@@ -40,7 +40,7 @@ class TextProcessor:
             os.makedirs(file_dir)
 
     def create_mp3_files(self):
-        file_name: str = f"{self.config.subreddits}-{self.post_id}-0.mp3"
+        file_name = f"{self.config.subreddits}-{self.post_id}-0.mp3"
         file_name = os.path.join(self.file_dir, file_name)
 
         # Print a yellow separator
@@ -50,15 +50,14 @@ class TextProcessor:
         # Print a message in yellow
         print("\033[93m" + f"Creating sound for {self.title_text}" + "\033[0m")
 
-        tiktok_tts = TikTok()
-        tiktok_tts.run(self.title_text, file_name, self.voice)
+        tts = local_TTS()
+        tts.run(self.title_text, file_name)
         count = 1
 
         for text in self.chunks:
-            file_name: str = f"{self.config.subreddits}-{self.post_id}-{count}.mp3"
+            file_name = f"{self.config.subreddits}-{self.post_id}-{count}.mp3"
             file_name = os.path.join(self.file_dir, file_name)
-            tiktok_tts = TikTok()
-            tiktok_tts.run(text, file_name, self.voice)
+            tts.run(text, file_name)
             count += 1
 
         # Print "Done!!" in green
