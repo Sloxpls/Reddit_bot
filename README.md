@@ -18,6 +18,9 @@ Install the required Python packages by running the following command in your te
 pip install -r requirements.txt
 ```
 ```sh
+pip install --upgrade setuptools
+```
+```sh
 python main.py
 ```
 

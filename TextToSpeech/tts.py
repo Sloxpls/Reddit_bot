@@ -5,7 +5,7 @@ from TextToSpeech.local_tts import local_TTS
 
 class TextProcessor:
     def __init__(self, config, reddit_fetcher):
-        self.voice = reddit_fetcher.voice
+
         self.file_dir = None
         self.config = config
         self.post_id = reddit_fetcher.post_id
