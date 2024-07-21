@@ -47,6 +47,11 @@ username, password, client_id, client_secret: Enter your Reddit API credentials 
 video_download_dir: Directory to store downloaded background videos.
 
 audio_download_dir: Directory to store downloaded background audio.
+
+
+---
+
+## TTS options
 TTS and TikTok API Integration
 The script supports both local TTS and TikTok API for generating speech. By default, the local TTS is used.
 
