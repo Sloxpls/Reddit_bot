@@ -16,7 +16,7 @@ class TextProcessor:
         self.create_dir_for_mp3()
         self.create_mp3_files()
 
-    def split_text_into_chunks(self, max_chunk_length=200):
+    def split_text_into_chunks(self, max_chunk_length=512):
         chunks = []
         words = self.self_text.split()
         current_chunk = ""
