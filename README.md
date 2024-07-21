@@ -47,3 +47,13 @@ username, password, client_id, client_secret: Enter your Reddit API credentials 
 video_download_dir: Directory to store downloaded background videos.
 
 audio_download_dir: Directory to store downloaded background audio.
+TTS and TikTok API Integration
+The script supports both local TTS and TikTok API for generating speech. By default, the local TTS is used.
+
+Local TTS
+The local TTS engine converts text from Reddit posts to speech on your local machine. You don't need to do any additional setup beyond the initial installation of the required Python packages.
+
+TikTok API
+If you prefer to use TikTok's TTS service, you need to configure the TikTok API settings in the config.json file. Ensure you have the API credentials and set the use_tiktok_tts option to true. The TikTok API can offer different voice options and better quality. cod changes might be required
+
+
